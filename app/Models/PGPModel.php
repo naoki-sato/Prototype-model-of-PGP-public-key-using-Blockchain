@@ -33,7 +33,6 @@ class PGPModel
             );
         } catch (PDOException $exception) {
 
-            Log::alert($exception);
             return false;
         }
 
@@ -47,7 +46,6 @@ class PGPModel
      */
     public function updateVerified($token)
     {
-
 
         $date = Carbon::now();
 
@@ -71,5 +69,36 @@ class PGPModel
         if (!$result) return false;
 
         return true;
+    }
+
+
+    /**
+     * get AsciiArmored by token
+     * @param $token
+     * @return array
+     */
+    public function getAsciiArmored($token)
+    {
+        try {
+
+            $result = DB::connection('pgp')->selectOne(
+                'SELECT ascii_armored
+                FROM pgp_registration
+                WHERE
+                    email_token = :email_token AND
+                    verified = 1',
+                [
+                    'email_token' => $token
+                ]
+            );
+
+        } catch (PDOException $exception) {
+
+            return [];
+        }
+
+        if (!$result) return [];
+
+        return $result->ascii_armored;
     }
 }
