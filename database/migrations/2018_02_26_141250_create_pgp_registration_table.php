@@ -15,8 +15,8 @@ class CreatePgpRegistrationTable extends Migration
     {
         Schema::create('pgp_registration', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('ascii_armored')->unique();
-            $table->string('email_token')->nullable();
+            $table->text('ascii_armored');
+            $table->string('email_token');
             $table->tinyInteger('verified')->default(0);
             $table->timestamps();
         });
