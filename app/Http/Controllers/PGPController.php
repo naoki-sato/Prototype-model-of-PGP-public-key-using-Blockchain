@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\PGPService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class PGPController extends Controller
 {
@@ -52,6 +53,23 @@ class PGPController extends Controller
     public function verify($token)
     {
         return $this->pgp_service->verify($token);
+    }
+
+
+    /**
+     * Search for UserID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function search()
+    {
+        $search = Input::get('search');
+
+        $result = $this->pgp_service->search($search);
+
+        return view('search',
+            [
+                'search_userid' => $search,
+                'search_result' => $result]);
     }
 
 }

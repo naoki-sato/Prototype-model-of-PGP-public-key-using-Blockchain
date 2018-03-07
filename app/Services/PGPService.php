@@ -92,6 +92,25 @@ class PGPService implements PGPServiceInterface
 
 
     /**
+     * search
+     * @param $searchUserID
+     * @return array
+     */
+    public function search($searchUserID)
+    {
+
+        $cmd = "curl 'http://127.0.0.1:9984/api/v1/assets?search=${searchUserID}&limit=10'";
+
+        $result = json_decode(shell_exec($cmd));
+
+        if (isset($result->status) && ($result->status === 400))
+            return [];
+
+        return $result;
+    }
+
+
+    /**
      * get UserID from Ascii Armored
      * @param $asciiArmored
      * @return array

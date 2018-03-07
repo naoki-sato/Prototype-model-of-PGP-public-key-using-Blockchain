@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
     <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
     <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 
     <style>
 
@@ -44,67 +45,58 @@
             background-color: #ab5dda;
         }
 
-        textarea {
-            margin-top: 0;
-            margin-bottom: 15px;
-            height: 250px;
-        }
-
-
     </style>
 
 </head>
 <body>
 
 
-<nav class='navbar'>
+<nav class="navbar">
     <ul>
         <li><a class="active" href="{{ route('home') }}">Home</a></li>
     </ul>
 </nav>
-<div class='container'>
+<div class="container">
 
+    <div>Search UserID: "{{ $search_userid or '' }}"</div>
 
-    {{-- お知らせメッセージ --}}
-    @if(Session::has('message'))
-        <div class="alert alert-info">{!! Session::get('message') !!}</div>
-    @endif
-
-    <h3>Prototype model of PGP public key using Blockchain</h3>
-
-    <form method="post" action="{{ route('provisional.auth') }}">
-        {{ csrf_field() }}
-
-        <fieldset>
-
-            <label for="ascii-armored">Submit a key</label>
-            <textarea placeholder="Enter ASCII-armored PGP key here:" rows="100" name="ascii-armored"></textarea>
-
-            @if ($errors->has('ascii-armored'))
-                <span class="ascii-armored">
-                    <strong style="color: darkred">{{ $errors->first('ascii-armored') }}</strong>
-                </span>
-            @endif
-
-        </fieldset>
-
-        <button class="button button-outline float-right" type="submit">Submit Button</button>
-
-    </form>
-
-
-    <br/>
-    <hr/>
-
-
-    <form method="get" action="{{ route('search') }}">
-        <label for="search">Search for UserID</label>
-        <input type="text" placeholder="Search for UserID" id="search" name="search">
-        <button class="button button-outline float-right" type="submit">Search</button>
-    </form>
-
+    <table class="table" id="search-table">
+        <thead>
+            <tr>
+                <th>BlockChain ID</th>
+                <th>UserID</th>
+                <th>AsciiArmored</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($search_result as $value)
+                <tr>
+                    <td>{{ $value->id or '' }}</td>
+                    <td>{{ $value->data->pgp_public_key->UserID or '' }}</td>
+                    <td>{{ $value->data->pgp_public_key->Ascii_Armored  or '' }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+<script>
+    $(function () {
+        $("#search-table").DataTable(
+            {
+                lengthChange: false,
+                searching: false,
+                ordering: false,
+                info: false,
+                paging: false,
+                scrollX: true
+            }
+        );
+    });
+</script>
 
 </body>
 </html>

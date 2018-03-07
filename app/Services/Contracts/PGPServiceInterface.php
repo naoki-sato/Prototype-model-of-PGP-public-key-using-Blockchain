@@ -23,4 +23,12 @@ interface PGPServiceInterface
      */
     public function verify($token);
 
+
+    /**
+     * search
+     * @param $searchUserID
+     * @return array
+     */
+    public function search($searchUserID);
+
 }
